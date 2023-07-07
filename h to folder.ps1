@@ -41,7 +41,8 @@ try {
 	
 }
 catch {
-  Write-Host "An error occurred:"
-  Write-Host $_
+	Write-Host "An error occurred:"
+	Write-Host $_
+	pause
 }
 #pause
