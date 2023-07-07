@@ -61,5 +61,6 @@ catch {
 	Write-Host "An error occurred:"
 	Write-Host $_
 	pause
+	exit
 }
 #pause

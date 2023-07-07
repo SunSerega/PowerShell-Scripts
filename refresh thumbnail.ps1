@@ -2,19 +2,32 @@ try {
 	
 	
 	
-	$currentFolder = Split-Path -Parent $MyInvocation.MyCommand.Path
+	Add-Type -TypeDefinition `
+@"
+	using System;
+	using System.Runtime.InteropServices;
 	
-	$ps1Files = Get-ChildItem -Path $currentFolder -Filter "*.ps1" | Where-Object { $_.FullName -ne $MyInvocation.MyCommand.Path }
+	public class ThumbnailRefresh
+	{
+		private const int SHCNE_ASSOCCHANGED = 0x08000000;
+		private const int SHCNF_IDLIST = 0x0000;
+		private const int SHCNF_PATHW = 0x0005;
 	
-	$sendToFolder = [System.Environment]::GetFolderPath("SendTo")
+		[DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		private static extern void SHChangeNotify(int wEventId, int uFlags, [MarshalAs(UnmanagedType.LPWStr)] string dwItem1, IntPtr dwItem2);
 	
-	foreach ($file in $ps1Files) {
-		$shortcutPath = Join-Path -Path $sendToFolder -ChildPath "$($file.BaseName).lnk"
-		$wScriptShell = New-Object -ComObject WScript.Shell
-		$shortcut = $wScriptShell.CreateShortcut($shortcutPath)
-		$shortcut.TargetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-		$shortcut.Arguments = "-File `"$($file.FullName)`""
-		$shortcut.Save()
+		public static void RefreshThumbnail(string filePath)
+		{
+			//Console.WriteLine("C#: {0}", filePath);
+			// Notify the system that the file has changed
+			SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_PATHW, filePath, IntPtr.Zero);
+		}
+	}
+"@
+	
+	foreach ($fileName in $args) {
+		Write-Host $fileName
+		[ThumbnailRefresh]::RefreshThumbnail($fileName)
 	}
 	
 	
@@ -24,5 +37,6 @@ catch {
 	Write-Host "An error occurred:"
 	Write-Host $_
 	pause
+	exit
 }
 #pause
