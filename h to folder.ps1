@@ -44,6 +44,6 @@ catch {
 	Write-Host "An error occurred:"
 	Write-Host $_
 	pause
-	exit
+	exit 1
 }
 #pause
