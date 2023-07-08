@@ -32,7 +32,7 @@ try {
 	}
 	New-Item -ItemType Directory -Path $newFolderPath
 	
-	foreach($file in $files) {
+	foreach ($file in $files) {
 		$destination = Join-Path -Path $newFolderPath -ChildPath (Split-Path -Path $file -Leaf)
 		Move-Item -Path $file -Destination $destination
 	}
