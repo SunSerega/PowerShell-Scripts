@@ -1,11 +1,20 @@
-try {
+﻿try {
+	$anyWarnings = $false;
 	
 	
 	
 	$files = @()
 	foreach ($arg in $args) {
-		if (Test-Path $arg -PathType Leaf) {
+		if (Test-Path -LiteralPath $arg -PathType Leaf) {
 			$files += $arg
+		}
+		elseif (Test-Path -LiteralPath $arg) {
+			Write-Host "$arg is not a file"
+			$anyWarnings = $true
+		}
+		else {
+			Write-Host "$arg does not exist"
+			$anyWarnings = $true
 		}
 	}
 	
@@ -13,7 +22,7 @@ try {
 		throw "No files selected";
 	}
 	
-	$fileName = Split-Path -Path $files[0] -Leaf
+	$fileName = Split-Path -Leaf -Path $files[0]
 	
 	if ($fileName -match '^\d+') {
 		$folderName = $Matches[0]
@@ -22,19 +31,23 @@ try {
 		throw "No digits at the beginning of the file name."
 	}
 	
-	$parentDirectory = Split-Path -Path $files[0] -Parent
+	$parentDirectory = Split-Path -Parent -Path $files[0]
 	
 	$newFolderPath = Join-Path -Path $parentDirectory -ChildPath $folderName
 	
-	if (Test-Path -Path $newFolderPath) {
+	if ($anyWarnings) {
+		pause
+	}
+	
+	if (Test-Path -LiteralPath $newFolderPath) {
 		Write-Host $newFolderPath
 		throw "folder already exists"
 	}
 	New-Item -ItemType Directory -Path $newFolderPath
 	
 	foreach ($file in $files) {
-		$destination = Join-Path -Path $newFolderPath -ChildPath (Split-Path -Path $file -Leaf)
-		Move-Item -Path $file -Destination $destination
+		$destination = Join-Path -Path $newFolderPath -ChildPath (Split-Path -Leaf -Path $file)
+		Move-Item -LiteralPath $file -Destination $destination
 	}
 	
 	
