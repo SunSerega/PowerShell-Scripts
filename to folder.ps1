@@ -24,11 +24,15 @@
 	
 	$fileName = Split-Path -Leaf -Path $files[0]
 	
-	if ($fileName -match '^\d+') {
-		$folderName = $Matches[0]
+	$folderName = "";
+	if ($fileName -match '^[^\d]*(\d+)') {
+		$folderName = $Matches[1]
 	}
-	else {
-		throw "No digits at the beginning of the file name."
+	if ($userFolderName = Read-Host "Folder name [$folderName]") {
+		$folderName = $userFolderName
+	}
+	if (!$folderName) {
+		throw "No folder name"
 	}
 	
 	$parentDirectory = Split-Path -Parent -Path $files[0]
