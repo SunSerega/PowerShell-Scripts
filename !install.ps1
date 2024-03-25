@@ -1,4 +1,4 @@
-try {
+﻿try {
 	
 	
 	
@@ -15,7 +15,7 @@ try {
 		$shortcutPath = Join-Path -Path $sendToFolder -ChildPath "+$($file.BaseName).lnk"
 		$wScriptShell = New-Object -ComObject WScript.Shell
 		$shortcut = $wScriptShell.CreateShortcut($shortcutPath)
-		$shortcut.TargetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+		$shortcut.TargetPath = "pwsh"
 		$shortcut.Arguments = "-File `"$($file.FullName)`""
 		$shortcut.Save()
 	}
