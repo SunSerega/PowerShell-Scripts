@@ -1,15 +1,17 @@
-try {
+﻿try {
 	
 	
 	
 	$files = @()
 	foreach ($arg in $args) {
-		if (Test-Path $arg -PathType Container) {
+		if (Test-Path -LiteralPath $arg -PathType Container) {
 			$files += Get-ChildItem -Path $arg -Recurse -File | ForEach-Object {
 				$_.FullName
 			}
-		} elseif (Test-Path $arg -PathType Leaf) {
+		} elseif (Test-Path -LiteralPath $arg -PathType Leaf) {
 			$files += $arg
+		} else {
+			Write-Host "$arg does not exist"
 		}
 	}
 	

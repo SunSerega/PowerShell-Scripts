@@ -7,12 +7,10 @@
 	foreach ($arg in $args) {
 		if (Test-Path -LiteralPath $arg -PathType Leaf) {
 			$files += $arg
-		}
-		elseif (Test-Path -LiteralPath $arg) {
+		} elseif (Test-Path -LiteralPath $arg) {
 			Write-Host "$arg is not a file"
 			$anyWarnings = $true
-		}
-		else {
+		} else {
 			Write-Host "$arg does not exist"
 			$anyWarnings = $true
 		}
@@ -40,6 +38,7 @@
 	$newFolderPath = Join-Path -Path $parentDirectory -ChildPath $folderName
 	
 	if ($anyWarnings) {
+		Write-Host "Are you sure you want to continue?"
 		pause
 	}
 	
