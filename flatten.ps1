@@ -37,9 +37,9 @@
 	}
 	
 	foreach ($file in $files) {
-		#Write-Host $"[$file] relative to [$parentDirectory]"
-		$relativePath = Resolve-Path $file -RelativeBasePath $parentDirectory -Relative
-		#Write-Host $"[$relativePath]"
+		# Write-Host "[$file] relative to [$parentDirectory]"
+		$relativePath = Resolve-Path -LiteralPath $file -RelativeBasePath $parentDirectory -Relative
+		# Write-Host "[$relativePath]"
 		
 		if (-not $relativePath.StartsWith(".\")) {
 			throw "[$file] is not in [$parentDirectory]"
