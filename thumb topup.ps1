@@ -17,7 +17,7 @@ public class CS
 			
 			var bw = new BinaryWriter(str);
 			bw.Write(3); // Commands.LoadCompare
-			bw.Write(true);
+			bw.Write(false);
 			bw.Write(paths.Length);
 			foreach (var path in paths)
 				bw.Write(path);
