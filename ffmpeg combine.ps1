@@ -1,4 +1,5 @@
 ﻿try {
+	$ErrorActionPreference = 'Stop'
 	
 	
 	
@@ -49,10 +50,13 @@
 		return $prefix
 	}
 	
-	$outputFile = (Get-LongestCommonPrefix $args) + ' - combined.mp4'
+	$outputFile = (Get-LongestCommonPrefix $args) + ' - combined.mkv'
 	
 	Write-Host 'ffmpeg -f concat -safe 0 -i "'$tempFile'" -c copy "'$outputFile'"'
 	ffmpeg -f concat -safe 0 -i "$tempFile" -c copy "$outputFile"
+	if (-not $?) {
+		throw 'failed to combine'
+	}
 	
 	Remove-Item -Path $tempFile
 	
